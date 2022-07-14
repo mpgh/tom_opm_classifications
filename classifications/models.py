@@ -18,9 +18,14 @@ class TargetClassification(models.Model):
 
     def as_dict(self):
         return {
+            'target': self.target,
             'broker': self.source,
             'level': self.level,
             'type': self.classification,
             'prob': self.probability,
-            'mjd': self.mjd
+            'mjd': self.mjd,
         }
+        
+    def __str__(self):
+        s = f'{self.target}, {self.classification}, {self.probability}'
+        return s
