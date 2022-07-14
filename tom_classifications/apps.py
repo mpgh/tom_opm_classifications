@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ClassificationsConfig(AppConfig):
+class TomClassificationsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'classifications'
+    name = 'tom_classifications'
