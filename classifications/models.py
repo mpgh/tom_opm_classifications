@@ -15,6 +15,7 @@ class TargetClassification(models.Model):
     classification = models.TextField(blank=True, default='')
     probability = models.FloatField(null=True, blank=True)
     mjd = models.FloatField(null=True, blank=True)
+    transient = models.BooleanField(null=False, blank=False, default=False)
 
     def as_dict(self):
         return {
@@ -24,8 +25,9 @@ class TargetClassification(models.Model):
             'type': self.classification,
             'prob': self.probability,
             'mjd': self.mjd,
+            'transient': self.transient,
         }
-        
+
     def __str__(self):
         s = f'{self.target}, {self.classification}, {self.probability}'
         return s
