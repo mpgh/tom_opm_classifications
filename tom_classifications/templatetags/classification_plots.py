@@ -132,7 +132,8 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         opacity=0.15,
         hovertext=['AGN Types', 'Supernovae', 'Pulsating', 'Stellar Variability', 'Asteroid', 'Other Variability'],
         hoverinfo='text',
-        name='Groupings'
+        
+        showlegend=False
     ))
     fig.add_trace(go.Barpolar(
         r=[.1,.1,.1,.1,.1,.1],
@@ -142,7 +143,8 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         opacity=0.8,
         hovertext=['AGN Types', 'Supernovae', 'Pulsating', 'Stellar Variability', 'Asteroid', 'Other Variability'],
         hoverinfo='text',
-        base=[1,1,1,1,1,1]
+        name='Groupings',
+        base=[1,1,1,1,1,1],
     ))
     objs = ['SNIa', 'SNIbc', 'SNII', 'SLSN', 'SN*', 'QSO', 'AGN', 'G*', 'LP*', 'Ce*', 'RR*', 'dS*', 'Pu*', 'EB*', 'CV*', '**',  'Y*O', 'Er*', 'Ro*', 'V*', 'ast', 'grv', 'Other', '~Alert']
 
