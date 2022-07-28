@@ -13,14 +13,14 @@ The documentation and a more detailed readme will come later.
 
 "pip install tom_classifications"
 
-2. Migrate your TOM's database to install the new database tables:
-`./manage.py migrate`
-
-3. In your project's "settings.py", add "tom_classifications" to your "INSTALLED_APPS" setting:
+2. In your project's "settings.py", add "tom_classifications" to your "INSTALLED_APPS" setting:
 "INSTALLED_APPS = [
     ...
     'tom_classifications',
 ]"
+
+3. Migrate your TOM's database to install the new database tables:
+`./manage.py migrate`
 
 4. Copy the data files from "tom_classifications/data" to the data/ directory of your TOM.
 
