@@ -1,21 +1,7 @@
-from datetime import datetime, timedelta
 import json
-from astroplan import moon_illumination
-from astropy import units as u
-from astropy.coordinates import Angle, get_moon, SkyCoord
-from astropy.time import Time
 from django import template
-from django.conf import settings
-from django.db.models import Q
-from guardian.shortcuts import get_objects_for_user
-import numpy as np
 from plotly import offline
-from plotly.subplots import make_subplots
 from plotly import graph_objs as go
-
-from tom_observations.utils import get_sidereal_visibility
-from tom_targets.models import Target, TargetExtra, TargetList
-from tom_targets.forms import TargetVisibilityForm
 
 register = template.Library()
 
@@ -30,7 +16,7 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
     lasair_tcs = tcs.filter(source='Lasair')
     fink_tcs = tcs.filter(source='Fink')
 
-    with open('/home/bmills/bmillsWork/tom_test/mytom/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
+    with open('../data/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
         big_codes_dict = json.load(json_file)
     las_codes = big_codes_dict['las_codes']
     alst_codes = big_codes_dict['alerce_stamp_codes']
@@ -52,7 +38,7 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
         codes.append( (allc_codes.get(tc.classification), 'Alerce LC', tc.probability))
         
     #deals with fink
-    with open('/home/bmills/bmillsWork/tom_test/mytom/SIMBAD_otypes_labels.txt') as f:
+    with open('../data/SIMBAD_otypes_labels.txt') as f:
         for line in f:
             [_, code, old, new] = line.split('|')
             fink_codes[old.strip()] = code.strip()
@@ -63,7 +49,7 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
             candidate = True
         codes.append( (fink_codes[tc.classification], 'Fink', tc.probability))
 
-    with open('/home/bmills/bmillsWork/tom_test/mytom/variability.txt') as json_file:
+    with open('../data/variability.txt') as json_file:
         parents_dict = json.load(json_file)
 
     labels = ['~Alert']
@@ -133,7 +119,7 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
     lasair_tcs = tcs.filter(source='Lasair')
     fink_tcs = tcs.filter(source='Fink')
 
-    with open('/home/bmills/bmillsWork/tom_test/mytom/variability.txt') as json_file:
+    with open('../data/variability.txt') as json_file:
         parents_dict = json.load(json_file)
     
     fig = go.Figure(go.Barpolar(
@@ -154,11 +140,11 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         opacity=0.8,
         hovertext=['AGN Types', 'Supernovae', 'Pulsating', 'Stellar Variability', 'Asteroid', 'Other Variability'],
         hoverinfo='text',
-        base=np.ones(6)
+        base=[1,1,1,1,1,1]
     ))
     objs = ['SNIa', 'SNIbc', 'SNII', 'SLSN', 'SN*', 'QSO', 'AGN', 'G*', 'LP*', 'Ce*', 'RR*', 'dS*', 'Pu*', 'EB*', 'CV*', '**',  'Y*O', 'Er*', 'Ro*', 'V*', 'ast', 'grv', 'Other', '~Alert']
     
-    with open('/home/bmills/bmillsWork/tom_test/mytom/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
+    with open('../data/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
         big_codes_dict = json.load(json_file)
     las_codes = big_codes_dict['las_codes']
     alst_codes = big_codes_dict['alerce_stamp_codes']
@@ -197,7 +183,7 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         name='ALeRCE Stamp',
         r=alst_probs,
         theta=alst_list,
-        width=np.ones(5),
+        width=[1,1,1,1,1],
         marker_color='#BB8FCE',
         marker_line_color="black",
         marker_line_width=2,
@@ -233,7 +219,7 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         fill = 'toself'))
 
     #deals with fink,
-    with open('/home/bmills/bmillsWork/tom_test/mytom/SIMBAD_otypes_labels.txt') as f:
+    with open('../data/SIMBAD_otypes_labels.txt') as f:
         for line in f:
             [_, code, old, new] = line.split('|')
             fink_codes[old.strip()] = code.strip()
