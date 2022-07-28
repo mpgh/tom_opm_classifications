@@ -2,13 +2,15 @@ import json
 from django import template
 from plotly import offline
 from plotly import graph_objs as go
+from django.conf import settings
+from os import path
 
 register = template.Library()
 
 @register.inclusion_tag('tom_classifications/partials/classif_sun.html')
 def classif_sun(target, width=700, height=700, background=None, label_color=None, grid=True):
     tcs = target.targetclassification_set.all()
-    
+
     alerce_lc_tcs = tcs.filter(level='lc_classifier')
     alerce_stamp_tcs= tcs.filter(level='stamp_classifier_1.0.4')
     if len(alerce_stamp_tcs) == 0:
@@ -16,7 +18,7 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
     lasair_tcs = tcs.filter(source='Lasair')
     fink_tcs = tcs.filter(source='Fink')
 
-    with open('../data/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
+    with open(path.join(settings.MEDIA_ROOT,'broker_codes.txt')) as json_file:#this loads the parentage dictionary that I made
         big_codes_dict = json.load(json_file)
     las_codes = big_codes_dict['las_codes']
     alst_codes = big_codes_dict['alerce_stamp_codes']
@@ -36,9 +38,9 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
     #does alerce lc
     for tc in alerce_lc_tcs:
         codes.append( (allc_codes.get(tc.classification), 'Alerce LC', tc.probability))
-        
+
     #deals with fink
-    with open('../data/SIMBAD_otypes_labels.txt') as f:
+    with open(path.join(settings.MEDIA_ROOT,'SIMBAD_otypes_labels.txt')) as f:
         for line in f:
             [_, code, old, new] = line.split('|')
             fink_codes[old.strip()] = code.strip()
@@ -49,7 +51,7 @@ def classif_sun(target, width=700, height=700, background=None, label_color=None
             candidate = True
         codes.append( (fink_codes[tc.classification], 'Fink', tc.probability))
 
-    with open('../data/variability.txt') as json_file:
+    with open(path.join(settings.MEDIA_ROOT,'variability.txt')) as json_file:
         parents_dict = json.load(json_file)
 
     labels = ['~Alert']
@@ -119,9 +121,9 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
     lasair_tcs = tcs.filter(source='Lasair')
     fink_tcs = tcs.filter(source='Fink')
 
-    with open('../data/variability.txt') as json_file:
+    with open(path.join(settings.MEDIA_ROOT,'variability.txt')) as json_file:
         parents_dict = json.load(json_file)
-    
+
     fig = go.Figure(go.Barpolar(
         r=[1,1,1,1,1,1,1],
         theta=['AGN', 'SNII', 'RR*', 'Y*O','ast', 'Other'],
@@ -143,8 +145,8 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         base=[1,1,1,1,1,1]
     ))
     objs = ['SNIa', 'SNIbc', 'SNII', 'SLSN', 'SN*', 'QSO', 'AGN', 'G*', 'LP*', 'Ce*', 'RR*', 'dS*', 'Pu*', 'EB*', 'CV*', '**',  'Y*O', 'Er*', 'Ro*', 'V*', 'ast', 'grv', 'Other', '~Alert']
-    
-    with open('../data/broker_codes.txt') as json_file:#this loads the parentage dictionary that I made
+
+    with open(path.join(settings.MEDIA_ROOT,'broker_codes.txt')) as json_file:#this loads the parentage dictionary that I made
         big_codes_dict = json.load(json_file)
     las_codes = big_codes_dict['las_codes']
     alst_codes = big_codes_dict['alerce_stamp_codes']
@@ -168,7 +170,7 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
             hovertext=['Lasair: ' + tc.classification],
             hoverinfo='text',
         ))
-    
+
     # deals with alerce stamp
     alst_list = []
     alst_probs = []
@@ -219,7 +221,7 @@ def classif_scatter(target, width=700, height=700, background=None, label_color=
         fill = 'toself'))
 
     #deals with fink,
-    with open('../data/SIMBAD_otypes_labels.txt') as f:
+    with open(path.join(settings.MEDIA_ROOT,'SIMBAD_otypes_labels.txt')) as f:
         for line in f:
             [_, code, old, new] = line.split('|')
             fink_codes[old.strip()] = code.strip()
