@@ -60,10 +60,10 @@ def merge_fink(fink_alert_list):
         try: #create target
             created = False
             target = Target.objects.get(name = alert["i:objectId"])
-        except:
+        except: # TODO
             target = FinkBroker().to_target(FinkBroker().to_generic_alert(alert))
             created = True
-        #redefines the keys of the alert to be preceded by "antares_"
+        #redefines the keys of the alert to be preceded by "fink_"
         fink_properties = {}
         for k in alert.keys():
             fink_properties['fink_{}'.format(k)] = alert[k]
