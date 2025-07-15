@@ -2,15 +2,17 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+from tom_targets.models import Target
 
 class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
-        ('tom_targets', '0019_auto_20210811_0018'),
+        ('tom_targets', '0026_alter_basetarget_permissions'),
     ]
+
+    
 
     operations = [
         migrations.CreateModel(
@@ -22,7 +24,7 @@ class Migration(migrations.Migration):
                 ('classification', models.TextField(blank=True, default='')),
                 ('probability', models.FloatField(blank=True, null=True)),
                 ('mjd', models.FloatField(blank=True, null=True)),
-                ('target', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tom_targets.target')),
+                ('target', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tom_targets.basetarget')),
             ],
         ),
     ]
